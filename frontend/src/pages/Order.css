@@ -1,0 +1,14 @@
+.orders-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.order-table-card {
+  padding: 24px;
+}
+
+.order-form-card {
+  padding: 24px;
+  max-width: 800px;
+}
