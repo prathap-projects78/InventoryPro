@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 
 function Sidebar({ onClose }) {
+  const navigate = useNavigate();
   const role = localStorage.getItem("role") || "viewer";
 
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -195,7 +196,7 @@ function Sidebar({ onClose }) {
             localStorage.removeItem("role");
             localStorage.removeItem("name");
             if (onClose) onClose();
-            window.location.href = "/login";
+            navigate("/login");
           }}
           style={{
             marginTop: "0",

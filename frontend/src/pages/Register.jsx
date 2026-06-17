@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
 
 function Register() {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,7 +21,7 @@ function Register() {
       });
 
       alert("Registration successful! Redirecting to login...");
-      window.location.href = "/login";
+      navigate("/login");
     } catch (error) {
       alert(error.response?.data?.message || "Registration failed. Try again.");
     }
@@ -135,7 +137,7 @@ function Register() {
 
           <p style={{ marginTop: "12px", fontSize: "14px", color: "var(--text-secondary)" }}>
             Already have an account?{" "}
-            <a href="/login" style={{ color: "var(--accent-blue)", textDecoration: "none", fontWeight: "bold" }}>Login</a>
+            <Link to="/login" style={{ color: "var(--accent-blue)", textDecoration: "none", fontWeight: "bold" }}>Login</Link>
           </p>
         </form>
       </div>
