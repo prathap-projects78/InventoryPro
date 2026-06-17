@@ -4,8 +4,7 @@ import "./Landing.css";
 
 function Landing() {
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    return localStorage.getItem("theme") === "dark" || 
-      (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    return localStorage.getItem("theme") === "dark";
   });
 
   useEffect(() => {

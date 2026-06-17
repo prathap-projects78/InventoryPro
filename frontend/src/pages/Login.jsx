@@ -40,9 +40,10 @@ function Login() {
           backdropFilter: "blur(16px)",
           WebkitBackdropFilter: "blur(16px)",
           border: "1px solid var(--border-light)",
-          padding: "40px",
+          padding: "32px 20px",
           borderRadius: "20px",
-          width: "360px",
+          width: "90%",
+          maxWidth: "380px",
           boxShadow: "var(--card-shadow)",
           textAlign: "center"
         }}

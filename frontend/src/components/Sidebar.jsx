@@ -7,8 +7,7 @@ function Sidebar({ onClose }) {
   const role = localStorage.getItem("role") || "viewer";
 
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    return localStorage.getItem("theme") === "dark" || 
-      (!localStorage.getItem("theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    return localStorage.getItem("theme") === "dark";
   });
 
   useEffect(() => {
