@@ -7,6 +7,19 @@ function Orders() {
   const [orders, setOrders] = useState([]);
   const role = localStorage.getItem("role") || "viewer";
 
+  const formatDateTime = (dateString) => {
+    if (!dateString) return "—";
+    const date = new Date(dateString);
+    return date.toLocaleString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true
+    });
+  };
+
   const fetchOrders = async () => {
     try {
       const data = await getOrders();
@@ -90,6 +103,7 @@ function Orders() {
                 <th>Product Name</th>
                 <th>Quantity Requested</th>
                 <th>Supplier</th>
+                <th>Timeline</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -97,7 +111,7 @@ function Orders() {
             <tbody>
               {orders.length === 0 ? (
                 <tr>
-                  <td colSpan="5" style={{ textCenter: "center", color: "var(--text-muted)", padding: "24px", textAlign: "center" }}>
+                  <td colSpan="6" style={{ textCenter: "center", color: "var(--text-muted)", padding: "24px", textAlign: "center" }}>
                     No purchase orders placed yet.
                   </td>
                 </tr>
@@ -107,6 +121,20 @@ function Orders() {
                     <td style={{ fontWeight: "600" }}>{order.product?.name || "Deleted Product"}</td>
                     <td>{order.quantity} units</td>
                     <td>{order.supplier}</td>
+                    <td>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "12px" }}>
+                        <div>
+                          <span style={{ color: "var(--text-muted)", fontWeight: "500" }}>Created: </span>
+                          <span style={{ color: "var(--text-secondary)" }}>{formatDateTime(order.createdAt)}</span>
+                        </div>
+                        {order.status === "Delivered" && (
+                          <div>
+                            <span style={{ color: "var(--accent-emerald)", fontWeight: "500" }}>Delivered: </span>
+                            <span style={{ color: "var(--text-secondary)" }}>{formatDateTime(order.deliveredAt || order.updatedAt)}</span>
+                          </div>
+                        )}
+                      </div>
+                    </td>
                     <td>
                       {order.status === "Pending" && (
                         <span className="badge badge-amber">Pending</span>

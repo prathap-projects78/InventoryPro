@@ -13,6 +13,7 @@ function Products() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [editForm, setEditForm] = useState({ price: "", quantity: "" });
   const [barcodeProduct, setBarcodeProduct] = useState(null);
 
   const fetchProducts = async () => {
@@ -47,21 +48,29 @@ function Products() {
 
   const handleEdit = (product) => {
     setEditingProduct(product);
+    setEditForm({
+      price: product.price,
+      quantity: product.quantity
+    });
   };
 
-  const handleUpdate = async () => {
-    const newPrice = prompt("Enter New Price (₹)", editingProduct.price);
-    if (newPrice === null || newPrice === "") return;
+  const handleUpdate = async (e) => {
+    if (e) e.preventDefault();
+    if (editForm.price === "" || editForm.quantity === "") {
+      alert("Price and quantity are required.");
+      return;
+    }
 
     try {
       await updateProduct(editingProduct._id, {
         ...editingProduct,
-        price: Number(newPrice)
+        price: Number(editForm.price),
+        quantity: Number(editForm.quantity)
       });
       fetchProducts();
       setEditingProduct(null);
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to update product price");
+      alert(err.response?.data?.message || "Failed to update product details");
     }
   };
 
@@ -207,7 +216,7 @@ function Products() {
                                 onClick={() => handleEdit(product)}
                                 style={{ padding: "6px 12px", fontSize: "13px" }}
                               >
-                                Edit Price
+                                Edit
                               </button>
                             )}
                             {role === "admin" && (
@@ -245,18 +254,52 @@ function Products() {
           justifyContent: "center",
           zIndex: 1000
         }}>
-          <div className="glass-card" style={{ width: "400px", padding: "30px", background: "var(--bg-secondary)" }}>
-            <h3 style={{ marginBottom: "16px" }}>Modify Price</h3>
-            <p style={{ marginBottom: "20px" }}>Update value of <strong>{editingProduct.name}</strong></p>
-            <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
-              <button className="btn-outline" onClick={() => setEditingProduct(null)}>
+          <form 
+            onSubmit={handleUpdate}
+            className="glass-card animate-scale-in" 
+            style={{ width: "400px", padding: "30px", background: "var(--bg-secondary)", border: "1px solid var(--border-color)", borderRadius: "16px", display: "flex", flexDirection: "column", gap: "16px" }}
+          >
+            <h3 style={{ fontSize: "20px", fontWeight: "700", margin: 0 }}>Edit Product</h3>
+            <p style={{ color: "var(--text-secondary)", fontSize: "14px", margin: 0 }}>
+              Updating details for <strong>{editingProduct.name}</strong>
+            </p>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+              <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)" }}>
+                Price (₹)
+              </label>
+              <input
+                type="number"
+                value={editForm.price}
+                onChange={(e) => setEditForm({ ...editForm, price: e.target.value })}
+                min="0"
+                step="any"
+                required
+              />
+            </div>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+              <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)" }}>
+                Quantity (Units)
+              </label>
+              <input
+                type="number"
+                value={editForm.quantity}
+                onChange={(e) => setEditForm({ ...editForm, quantity: e.target.value })}
+                min="0"
+                required
+              />
+            </div>
+            
+            <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end", marginTop: "8px" }}>
+              <button type="button" className="btn-outline" onClick={() => setEditingProduct(null)}>
                 Cancel
               </button>
-              <button className="btn-primary" onClick={handleUpdate}>
-                Update Price
+              <button type="submit" className="btn-primary">
+                Save Changes
               </button>
             </div>
-          </div>
+          </form>
         </div>
       )}
 

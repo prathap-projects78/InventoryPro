@@ -22,6 +22,10 @@ const purchaseOrderSchema = new mongoose.Schema(
       type: String,
       enum: ["Pending", "Approved", "Delivered", "Cancelled"],
       default: "Pending"
+    },
+
+    deliveredAt: {
+      type: Date
     }
   },
   {

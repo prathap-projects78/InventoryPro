@@ -62,6 +62,7 @@ const deliverPurchaseOrder = async (req, res) => {
     }
 
     order.status = "Delivered";
+    order.deliveredAt = new Date();
 
     await order.save();
 
