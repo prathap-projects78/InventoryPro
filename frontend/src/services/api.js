@@ -17,7 +17,7 @@ const getBaseURL = () => {
       return `http://${hostname}:5000/api`;
     }
   }
-  return "http://localhost:5000/api";
+  return "https://inventorypro-e8ku.onrender.com/api";
 };
 
 const api = axios.create({
