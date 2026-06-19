@@ -11,6 +11,8 @@ const purchaseOrderRoutes = require("./routes/purchaseOrderRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const reportsRoutes = require("./routes/reportsRoutes");
 
+const authMiddleware = require("./middleware/authMiddleware");
+
 connectDB();
 app.use("/api/auth", authroutes);
 app.use("/api/test", testroutes);
@@ -18,7 +20,7 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/stocks", stockRoutes);
 app.use("/api/purchase-orders", purchaseOrderRoutes);
-app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/dashboard", authMiddleware, dashboardRoutes);
 app.use("/api/reports", reportsRoutes);
 
 const PORT = process.env.PORT || 5000;

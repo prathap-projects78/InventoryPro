@@ -122,6 +122,35 @@ function Dashboard() {
 
       {stats && (
         <>
+          {/* Admin Specific KPIs */}
+          {userRole === "admin" && stats.adminStats && (
+            <div className="admin-stats-grid" style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+              gap: "16px",
+              marginBottom: "24px"
+            }}>
+              <div className="card" style={{ borderLeft: "4px solid var(--accent-rose)", padding: "16px" }}>
+                <span style={{ fontSize: "13px", color: "var(--text-secondary)", fontWeight: "500" }}>Total Platform Users</span>
+                <p className="kpi-value" style={{ margin: "8px 0 0 0" }}>{stats.adminStats.totalUsers}</p>
+              </div>
+              <div className="card" style={{ borderLeft: "4px solid var(--accent-emerald)", padding: "16px" }}>
+                <span style={{ fontSize: "13px", color: "var(--text-secondary)", fontWeight: "500" }}>Active Accounts</span>
+                <p className="kpi-value" style={{ margin: "8px 0 0 0" }}>{stats.adminStats.activeUsers}</p>
+              </div>
+              <div className="card" style={{ borderLeft: "4px solid var(--accent-amber)", padding: "16px" }}>
+                <span style={{ fontSize: "13px", color: "var(--text-secondary)", fontWeight: "500" }}>Inactive Accounts</span>
+                <p className="kpi-value" style={{ margin: "8px 0 0 0" }}>{stats.adminStats.inactiveUsers}</p>
+              </div>
+              <div className="card" style={{ borderLeft: "4px solid var(--accent-blue)", fontSize: "13px", display: "flex", flexDirection: "column", justifyContent: "center", gap: "4px", padding: "16px" }}>
+                <div style={{ color: "var(--text-secondary)" }}>👑 Admins: <strong style={{ color: "var(--text-primary)" }}>{stats.adminStats.totalAdmins}</strong></div>
+                <div style={{ color: "var(--text-secondary)" }}>📦 Managers: <strong style={{ color: "var(--text-primary)" }}>{stats.adminStats.totalManagers}</strong></div>
+                <div style={{ color: "var(--text-secondary)" }}>💼 Procurement: <strong style={{ color: "var(--text-primary)" }}>{stats.adminStats.totalProcurements}</strong></div>
+                <div style={{ color: "var(--text-secondary)" }}>👁️ Viewers: <strong style={{ color: "var(--text-primary)" }}>{stats.adminStats.totalViewers}</strong></div>
+              </div>
+            </div>
+          )}
+
           {/* Main KPI Stats Cards */}
           <div className="cards">
             <div className="card stat-card-1">
@@ -284,36 +313,63 @@ function Dashboard() {
 
             {/* Recent Activities Feed */}
             <div className="dashboard-tools-card recent-activities-panel animate-slide-up-2">
-              <h3>Recent Activities</h3>
+              <h3>{userRole === "admin" ? "Recent User Activity" : "Recent Activities"}</h3>
               <div className="activities-list">
-                <div className="activity-item">
-                  <div className="activity-indicator bg-accent-blue"></div>
-                  <div className="activity-detail">
-                    <p className="activity-title">Purchase Order PO-102 Approved</p>
-                    <p className="activity-meta">Updated by Manager | 12 minutes ago</p>
-                  </div>
-                </div>
-                <div className="activity-item">
-                  <div className="activity-indicator bg-accent-rose"></div>
-                  <div className="activity-detail">
-                    <p className="activity-title">Low Stock Alert Triggered</p>
-                    <p className="activity-meta">Product 'Steel Bolts' dropped below safety limit | 42 minutes ago</p>
-                  </div>
-                </div>
-                <div className="activity-item">
-                  <div className="activity-indicator bg-accent-emerald"></div>
-                  <div className="activity-detail">
-                    <p className="activity-title">Category 'Industrial Lubricants' Added</p>
-                    <p className="activity-meta">Created by Admin | 2 hours ago</p>
-                  </div>
-                </div>
-                <div className="activity-item">
-                  <div className="activity-indicator bg-accent-purple"></div>
-                  <div className="activity-detail">
-                    <p className="activity-title">Automatic Valuation Completed</p>
-                    <p className="activity-meta">System sync calculated inventory value | 4 hours ago</p>
-                  </div>
-                </div>
+                {userRole === "admin" && stats.adminStats?.recentUserActivity?.length > 0 ? (
+                  stats.adminStats.recentUserActivity.map((act) => (
+                    <div key={act.id} className="activity-item" style={{ display: "flex", gap: "12px", padding: "8px 0" }}>
+                      <div className="activity-indicator" style={{
+                        width: "8px",
+                        height: "8px",
+                        borderRadius: "50%",
+                        backgroundColor: act.status === "Active" ? "var(--accent-emerald)" : "var(--accent-rose)",
+                        marginTop: "6px"
+                      }}></div>
+                      <div className="activity-detail">
+                        <p className="activity-title" style={{ fontWeight: "600", fontSize: "14px", margin: 0 }}>
+                          {act.name} <span style={{ fontWeight: "normal", color: "var(--text-muted)", fontSize: "12px" }}>({act.role})</span>
+                        </p>
+                        <p className="activity-meta" style={{ fontSize: "12px", color: "var(--text-secondary)", margin: "2px 0" }}>
+                          {act.email} | {act.status === "Active" ? "Active Status" : "Deactivated Status"}
+                        </p>
+                        <span style={{ fontSize: "10px", color: "var(--text-muted)" }}>
+                          {new Date(act.timestamp).toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <>
+                    <div className="activity-item">
+                      <div className="activity-indicator bg-accent-blue"></div>
+                      <div className="activity-detail">
+                        <p className="activity-title">Purchase Order PO-102 Approved</p>
+                        <p className="activity-meta">Updated by Manager | 12 minutes ago</p>
+                      </div>
+                    </div>
+                    <div className="activity-item">
+                      <div className="activity-indicator bg-accent-rose"></div>
+                      <div className="activity-detail">
+                        <p className="activity-title">Low Stock Alert Triggered</p>
+                        <p className="activity-meta">Product 'Steel Bolts' dropped below safety limit | 42 minutes ago</p>
+                      </div>
+                    </div>
+                    <div className="activity-item">
+                      <div className="activity-indicator bg-accent-emerald"></div>
+                      <div className="activity-detail">
+                        <p className="activity-title">Category 'Industrial Lubricants' Added</p>
+                        <p className="activity-meta">Created by Admin | 2 hours ago</p>
+                      </div>
+                    </div>
+                    <div className="activity-item">
+                      <div className="activity-indicator bg-accent-purple"></div>
+                      <div className="activity-detail">
+                        <p className="activity-title">Automatic Valuation Completed</p>
+                        <p className="activity-meta">System sync calculated inventory value | 4 hours ago</p>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

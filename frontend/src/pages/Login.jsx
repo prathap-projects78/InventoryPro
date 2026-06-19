@@ -24,8 +24,13 @@ function Login() {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("role", response.data.role);
       localStorage.setItem("name", response.data.name || "");
+      localStorage.setItem("mustChangePassword", String(response.data.mustChangePassword));
 
-      navigate("/dashboard");
+      if (response.data.mustChangePassword) {
+        navigate("/change-password");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error) {
       alert(error.response?.data?.message || "Invalid credentials");
     }

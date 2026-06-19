@@ -16,7 +16,9 @@ import Orders from "./pages/Orders";
 import Landing from "./pages/Landing";
 import Users from "./pages/Users";
 import Reports from "./pages/Reports";
-import Register from "./pages/Register";
+import ChangePassword from "./pages/ChangePassword";
+import Suppliers from "./pages/Suppliers";
+import PurchaseRequests from "./pages/PurchaseRequests";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 
 function AppContent() {
@@ -25,7 +27,7 @@ function AppContent() {
   const showSidebar =
     location.pathname !== "/" &&
     location.pathname !== "/login" &&
-    location.pathname !== "/register";
+    location.pathname !== "/change-password";
 
   return (
     <div className={`app-layout ${isMobileMenuOpen ? "mobile-menu-open" : ""}`}>
@@ -82,8 +84,12 @@ function AppContent() {
           />
 
           <Route
-            path="/register"
-            element={<Register />}
+            path="/change-password"
+            element={
+              <ProtectedRoute allowedRoles={["admin", "manager", "procurement", "viewer"]}>
+                <ChangePassword />
+              </ProtectedRoute>
+            }
           />
 
           <Route
@@ -107,7 +113,7 @@ function AppContent() {
           <Route
             path="/categories"
             element={
-              <ProtectedRoute allowedRoles={["admin"]}>
+              <ProtectedRoute allowedRoles={["admin", "manager"]}>
                 <Categories />
               </ProtectedRoute>
             }
@@ -118,6 +124,24 @@ function AppContent() {
             element={
               <ProtectedRoute allowedRoles={["admin", "procurement"]}>
                 <Orders />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/suppliers"
+            element={
+              <ProtectedRoute allowedRoles={["admin", "procurement"]}>
+                <Suppliers />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/purchase-requests"
+            element={
+              <ProtectedRoute allowedRoles={["procurement"]}>
+                <PurchaseRequests />
               </ProtectedRoute>
             }
           />
@@ -134,7 +158,7 @@ function AppContent() {
           <Route
             path="/reports"
             element={
-              <ProtectedRoute allowedRoles={["admin", "viewer"]}>
+              <ProtectedRoute allowedRoles={["admin", "manager", "procurement", "viewer"]}>
                 <Reports />
               </ProtectedRoute>
             }

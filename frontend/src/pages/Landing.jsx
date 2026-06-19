@@ -112,9 +112,6 @@ function Landing() {
           <Link to="/login" className="btn-login">
             Login
           </Link>
-          <Link to="/register" className="btn-register">
-            Register
-          </Link>
         </div>
       </nav>
 
@@ -132,9 +129,6 @@ function Landing() {
           <div className="hero-cta" style={{ display: "flex", gap: "16px" }}>
             <Link to="/login" className="btn-get-started">
               Get Started
-            </Link>
-            <Link to="/register" className="btn-register-hero">
-              Register
             </Link>
           </div>
 

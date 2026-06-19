@@ -23,6 +23,15 @@ const userSchema = new mongoose.Schema({
       "viewer"
     ],
     default: "viewer"
+  },
+  status: {
+    type: String,
+    enum: ["Active", "Inactive"],
+    default: "Active"
+  },
+  mustChangePassword: {
+    type: Boolean,
+    default: true
   }
 }, { timestamps: true });
 
