@@ -112,7 +112,7 @@ function Sidebar({ onClose }) {
           </NavLink>
         )}
 
-        {role === "procurement" && (
+        {(role === "admin" || role === "manager") && (
           <NavLink to="/purchase-requests" onClick={onClose}>
             <svg
               xmlns="http://www.w3.org/2000/svg"

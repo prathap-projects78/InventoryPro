@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getOrders, approveOrder, deliverOrder } from "../services/orderService";
+import { getOrders, approveOrder, deliverOrder, rejectOrder } from "../services/orderService";
 import OrderForm from "../components/OrderForm";
 import "./Order.css";
 
@@ -54,6 +54,16 @@ function Orders() {
     }
   };
 
+  const handleReject = async (id) => {
+    if (!window.confirm("Are you sure you want to reject this purchase order?")) return;
+    try {
+      await rejectOrder(id);
+      fetchOrders();
+    } catch (err) {
+      alert(err.response?.data?.message || "Rejection failed");
+    }
+  };
+
   return (
     <div className="page-container orders-container animate-fade-in" style={{ position: "relative" }}>
       {/* Background aurora glow blobs */}
@@ -69,7 +79,7 @@ function Orders() {
         </div>
       </div>
 
-      {(role === "admin" || role === "procurement") && (
+      {role === "admin" && (
         <div className="glass-card order-form-card">
           <h3 style={{ marginBottom: "16px", fontSize: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
             <svg
@@ -145,19 +155,31 @@ function Orders() {
                       {order.status === "Delivered" && (
                         <span className="badge badge-emerald">Delivered</span>
                       )}
+                      {order.status === "Cancelled" && (
+                        <span className="badge badge-rose">Rejected</span>
+                      )}
                     </td>
                     <td>
                       <div style={{ display: "flex", gap: "8px" }}>
-                        {order.status === "Pending" && role === "admin" && (
-                          <button
-                            className="btn-primary"
-                            onClick={() => handleApprove(order._id)}
-                            style={{ padding: "6px 12px", fontSize: "13px" }}
-                          >
-                            Approve Order
-                          </button>
+                        {order.status === "Pending" && (role === "admin" || role === "procurement") && (
+                          <>
+                            <button
+                              className="btn-primary"
+                              onClick={() => handleApprove(order._id)}
+                              style={{ padding: "6px 12px", fontSize: "13px" }}
+                            >
+                              Approve
+                            </button>
+                            <button
+                              className="btn-danger"
+                              onClick={() => handleReject(order._id)}
+                              style={{ padding: "6px 12px", fontSize: "13px" }}
+                            >
+                              Reject
+                            </button>
+                          </>
                         )}
-                        {order.status === "Approved" && role === "admin" && (
+                        {order.status === "Approved" && (role === "admin" || role === "procurement") && (
                           <button
                             className="btn-primary"
                             onClick={() => handleDeliver(order._id)}
@@ -171,9 +193,14 @@ function Orders() {
                             ✅ Completed
                           </span>
                         )}
-                        {order.status !== "Delivered" && role !== "admin" && (
+                        {order.status === "Cancelled" && (
+                          <span style={{ color: "var(--accent-rose)", fontSize: "13px", fontWeight: "500", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                            ❌ Rejected
+                          </span>
+                        )}
+                        {(order.status === "Pending" || order.status === "Approved") && role !== "admin" && role !== "procurement" && (
                           <span style={{ color: "var(--text-muted)", fontSize: "13px", fontStyle: "italic" }}>
-                            Waiting Admin Action
+                            Awaiting Action
                           </span>
                         )}
                       </div>

@@ -8,7 +8,8 @@ const {
   createPurchaseOrder,
   getPurchaseOrders,
   approvePurchaseOrder,
-  deliverPurchaseOrder
+  deliverPurchaseOrder,
+  rejectPurchaseOrder
 } = require("../controllers/purchaseOrderController");
 
 router.get("/", getPurchaseOrders);
@@ -18,7 +19,7 @@ router.post(
  authMiddleware,
  authorizeRoles(
   "admin",
-  "procurement"
+  "manager"
  ),
  createPurchaseOrder
 );
@@ -27,16 +28,28 @@ router.put(
  "/:id/approve",
  authMiddleware,
  authorizeRoles(
-  "admin"
+  "admin",
+  "procurement"
  ),
  approvePurchaseOrder
+);
+
+router.put(
+ "/:id/reject",
+ authMiddleware,
+ authorizeRoles(
+  "admin",
+  "procurement"
+ ),
+ rejectPurchaseOrder
 );
 
 router.put(
  "/:id/deliver",
  authMiddleware,
  authorizeRoles(
-  "admin"
+  "admin",
+  "procurement"
  ),
  deliverPurchaseOrder
 );

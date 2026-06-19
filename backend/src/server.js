@@ -10,6 +10,7 @@ const stockRoutes = require("./routes/stockRoutes");
 const purchaseOrderRoutes = require("./routes/purchaseOrderRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const reportsRoutes = require("./routes/reportsRoutes");
+const supplierRoutes = require("./routes/supplierRoutes");
 
 const authMiddleware = require("./middleware/authMiddleware");
 
@@ -22,6 +23,7 @@ app.use("/api/stocks", stockRoutes);
 app.use("/api/purchase-orders", purchaseOrderRoutes);
 app.use("/api/dashboard", authMiddleware, dashboardRoutes);
 app.use("/api/reports", reportsRoutes);
+app.use("/api/suppliers", supplierRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => { 

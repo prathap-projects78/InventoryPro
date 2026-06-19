@@ -70,7 +70,7 @@ function Dashboard() {
   };
 
   const showAddProduct = ["admin", "manager"].includes(userRole);
-  const showCreateOrder = ["admin", "manager", "procurement"].includes(userRole);
+  const showCreateOrder = ["admin", "manager"].includes(userRole);
 
   const getRoleDisplayName = (role) => {
     switch (role) {

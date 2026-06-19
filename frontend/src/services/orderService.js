@@ -29,6 +29,17 @@ export const deliverOrder =
   return response.data;
 };
 
+export const rejectOrder =
+  async (id) => {
+
+  const response =
+    await api.put(
+      `/purchase-orders/${id}/reject`
+    );
+
+  return response.data;
+};
+
 export const createOrder = async (order) => {
   const response = await api.post(
     "/purchase-orders",

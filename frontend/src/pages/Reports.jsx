@@ -146,8 +146,8 @@ function Reports() {
     }
 
     const role = localStorage.getItem("role") || "viewer";
-    if (role !== "admin" && role !== "procurement") {
-      setActionMessage({ type: "error", text: "Access Denied: Only Admin or Procurement roles can create purchase orders." });
+    if (role !== "admin" && role !== "manager") {
+      setActionMessage({ type: "error", text: "Access Denied: Only Admin or Manager roles can create purchase orders." });
       return;
     }
 

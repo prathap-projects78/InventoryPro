@@ -83,9 +83,36 @@ const deliverPurchaseOrder = async (req, res) => {
   }
 };
 
+const rejectPurchaseOrder = async (req, res) => {
+  try {
+    const order = await PurchaseOrder.findByIdAndUpdate(
+      req.params.id,
+      {
+        status: "Cancelled"
+      },
+      {
+        new: true
+      }
+    );
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found"
+      });
+    }
+
+    res.status(200).json(order);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
 module.exports = {
   createPurchaseOrder,
   getPurchaseOrders,
   approvePurchaseOrder,
-  deliverPurchaseOrder
+  deliverPurchaseOrder,
+  rejectPurchaseOrder
 };

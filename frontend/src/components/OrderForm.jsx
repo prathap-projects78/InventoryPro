@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { createOrder } from "../services/orderService";
 import { getProducts } from "../services/productService";
+import { getSuppliers } from "../services/supplierService";
 
 function OrderForm({ onOrderAdded }) {
   const [products, setProducts] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
   const [formData, setFormData] = useState({
     product: "",
     quantity: "",
@@ -11,16 +13,20 @@ function OrderForm({ onOrderAdded }) {
   });
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchFormLookups = async () => {
       try {
-        const data = await getProducts();
-        setProducts(data);
+        const [productsData, suppliersData] = await Promise.all([
+          getProducts(),
+          getSuppliers()
+        ]);
+        setProducts(productsData);
+        setSuppliers(suppliersData);
       } catch (error) {
-        console.error("Failed to load products in order form:", error);
+        console.error("Failed to load products/suppliers in order form:", error);
       }
     };
 
-    fetchProducts();
+    fetchFormLookups();
   }, []);
 
   const handleChange = (e) => {
@@ -97,14 +103,19 @@ function OrderForm({ onOrderAdded }) {
 
       <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
         <label style={{ fontSize: "13px", color: "var(--text-secondary)" }}>Supplier</label>
-        <input
-          type="text"
+        <select
           name="supplier"
-          placeholder="e.g. Global Distributors"
           value={formData.supplier}
           onChange={handleChange}
           required
-        />
+        >
+          <option value="">Choose Supplier</option>
+          {suppliers.map((sup) => (
+            <option key={sup._id} value={sup.name}>
+              {sup.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <button type="submit" style={{ height: "46px" }}>

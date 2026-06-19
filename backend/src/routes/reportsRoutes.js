@@ -9,7 +9,7 @@ const { getReportsData } = require("../controllers/reportsController");
 router.get(
   "/",
   authMiddleware,
-  authorizeRoles("admin", "viewer"),
+  authorizeRoles("admin", "manager", "procurement", "viewer"),
   getReportsData
 );
 
